@@ -1,0 +1,30 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Collaborator {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateCollaboratorInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Mutation {
+  createCollaborator(createCollaboratorInput: CreateCollaboratorInput!): Collaborator!
+  removeCollaborator(id: Int!): Collaborator!
+  updateCollaborator(updateCollaboratorInput: UpdateCollaboratorInput!): Collaborator!
+}
+
+type Query {
+  collaborator(id: Int!): Collaborator!
+  collaborators: [Collaborator!]!
+}
+
+input UpdateCollaboratorInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
