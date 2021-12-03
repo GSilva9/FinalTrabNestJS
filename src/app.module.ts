@@ -4,6 +4,7 @@ import { join } from 'path';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CollaboratorsModule } from './modules/collaborators/collaborators.module';
+import { TasksModule } from './modules/tasks/tasks.module';
 
 @Module({
   imports: [GraphQLModule.forRoot({
@@ -11,7 +12,8 @@ import { CollaboratorsModule } from './modules/collaborators/collaborators.modul
     sortSchema: true,
   }),
   TypeOrmModule.forRoot(),
-  CollaboratorsModule
+  CollaboratorsModule,
+  TasksModule
   ],
   providers: [AppService],
 })

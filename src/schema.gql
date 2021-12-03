@@ -87,10 +87,52 @@ input CreateManyCollaboratorsInput {
   collaborators: [CreateCollaboratorInput!]!
 }
 
+input CreateManyTasksInput {
+  """Array of records to create"""
+  tasks: [CreateTaskInput!]!
+}
+
 input CreateOneCollaboratorInput {
   """The record to create"""
   collaborator: CreateCollaboratorInput!
 }
+
+input CreateOneTaskInput {
+  """The record to create"""
+  task: CreateTaskInput!
+}
+
+input CreateTaskInput {
+  deliveryDate: DateTime!
+  expectedDate: DateTime!
+  name: String!
+  status: String!
+}
+
+input DateFieldComparison {
+  between: DateFieldComparisonBetween
+  eq: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  is: Boolean
+  isNot: Boolean
+  lt: DateTime
+  lte: DateTime
+  neq: DateTime
+  notBetween: DateFieldComparisonBetween
+  notIn: [DateTime!]
+}
+
+input DateFieldComparisonBetween {
+  lower: DateTime!
+  upper: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 input DeleteManyCollaboratorsInput {
   """Filter to find records to delete"""
@@ -102,18 +144,34 @@ type DeleteManyResponse {
   deletedCount: Int!
 }
 
+input DeleteManyTasksInput {
+  """Filter to find records to delete"""
+  filter: TaskDeleteFilter!
+}
+
 input DeleteOneCollaboratorInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteOneTaskInput {
   """The id of the record to delete."""
   id: ID!
 }
 
 type Mutation {
   createManyCollaborators(input: CreateManyCollaboratorsInput!): [Collaborator!]!
+  createManyTasks(input: CreateManyTasksInput!): [Task!]!
   createOneCollaborator(input: CreateOneCollaboratorInput!): Collaborator!
+  createOneTask(input: CreateOneTaskInput!): Task!
   deleteManyCollaborators(input: DeleteManyCollaboratorsInput!): DeleteManyResponse!
+  deleteManyTasks(input: DeleteManyTasksInput!): DeleteManyResponse!
   deleteOneCollaborator(input: DeleteOneCollaboratorInput!): CollaboratorDeleteResponse!
+  deleteOneTask(input: DeleteOneTaskInput!): TaskDeleteResponse!
   updateManyCollaborators(input: UpdateManyCollaboratorsInput!): UpdateManyResponse!
+  updateManyTasks(input: UpdateManyTasksInput!): UpdateManyResponse!
   updateOneCollaborator(input: UpdateOneCollaboratorInput!): Collaborator!
+  updateOneTask(input: UpdateOneTaskInput!): Task!
 }
 
 type OffsetPageInfo {
@@ -147,6 +205,20 @@ type Query {
     """Specify to sort results."""
     sorting: [CollaboratorSort!] = []
   ): CollaboratorConnection!
+  task(
+    """The id of the record to find."""
+    id: ID!
+  ): Task
+  tasks(
+    """Specify to filter the records returned."""
+    filter: TaskFilter = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [TaskSort!] = []
+  ): TaskConnection!
 }
 
 """Sort Directions"""
@@ -178,6 +250,93 @@ input StringFieldComparison {
   notLike: String
 }
 
+type Task {
+  deliveryDate: DateTime!
+  expectedDate: DateTime!
+  id: String!
+  name: String!
+  status: String!
+}
+
+type TaskAggregateGroupBy {
+  deliveryDate: DateTime
+  expectedDate: DateTime
+  name: String
+}
+
+type TaskConnection {
+  """Array of nodes."""
+  nodes: [Task!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type TaskCountAggregate {
+  deliveryDate: Int
+  expectedDate: Int
+  name: Int
+}
+
+input TaskDeleteFilter {
+  and: [TaskDeleteFilter!]
+  deliveryDate: DateFieldComparison
+  expectedDate: DateFieldComparison
+  name: StringFieldComparison
+  or: [TaskDeleteFilter!]
+}
+
+type TaskDeleteResponse {
+  deliveryDate: DateTime
+  expectedDate: DateTime
+  id: String
+  name: String
+  status: String
+}
+
+input TaskFilter {
+  and: [TaskFilter!]
+  deliveryDate: DateFieldComparison
+  expectedDate: DateFieldComparison
+  name: StringFieldComparison
+  or: [TaskFilter!]
+}
+
+type TaskMaxAggregate {
+  deliveryDate: DateTime
+  expectedDate: DateTime
+  name: String
+}
+
+type TaskMinAggregate {
+  deliveryDate: DateTime
+  expectedDate: DateTime
+  name: String
+}
+
+input TaskSort {
+  direction: SortDirection!
+  field: TaskSortFields!
+  nulls: SortNulls
+}
+
+enum TaskSortFields {
+  deliveryDate
+  expectedDate
+  name
+}
+
+input TaskUpdateFilter {
+  and: [TaskUpdateFilter!]
+  deliveryDate: DateFieldComparison
+  expectedDate: DateFieldComparison
+  name: StringFieldComparison
+  or: [TaskUpdateFilter!]
+}
+
 input UpdateCollaboratorInput {
   cpf: String
   id: String!
@@ -197,10 +356,34 @@ type UpdateManyResponse {
   updatedCount: Int!
 }
 
+input UpdateManyTasksInput {
+  """Filter used to find fields to update"""
+  filter: TaskUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateTaskInput!
+}
+
 input UpdateOneCollaboratorInput {
   """The id of the record to update"""
   id: ID!
 
   """The update to apply."""
   update: UpdateCollaboratorInput!
+}
+
+input UpdateOneTaskInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateTaskInput!
+}
+
+input UpdateTaskInput {
+  deliveryDate: DateTime
+  expectedDate: DateTime
+  id: Int!
+  name: String
+  status: String
 }
