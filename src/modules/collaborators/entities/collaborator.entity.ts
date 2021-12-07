@@ -12,7 +12,9 @@ export class Collaborator {
   @Column()
   cpf: string;
 
-  @OneToMany(() => Task, (tasks) => tasks.collaborator)
+  @OneToMany(() => Task, (tasks) => tasks.collaborator, {
+    eager: true
+  })
   tasks: Task[]
 
 }

@@ -2,10 +2,28 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddTasksToCollaboratorInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}
+
 type Collaborator {
   cpf: String!
   id: String!
   name: String!
+  tasks(
+    """Specify to filter the records returned."""
+    filter: TaskFilter = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [TaskSort!] = []
+  ): CollaboratorTasksConnection!
 }
 
 type CollaboratorAggregateGroupBy {
@@ -47,6 +65,15 @@ input CollaboratorFilter {
   cpf: StringFieldComparison
   name: StringFieldComparison
   or: [CollaboratorFilter!]
+  tasks: CollaboratorFilterTaskFilter
+}
+
+input CollaboratorFilterTaskFilter {
+  and: [CollaboratorFilterTaskFilter!]
+  deliveryDate: DateFieldComparison
+  expectedDate: DateFieldComparison
+  name: StringFieldComparison
+  or: [CollaboratorFilterTaskFilter!]
 }
 
 type CollaboratorMaxAggregate {
@@ -68,6 +95,17 @@ input CollaboratorSort {
 enum CollaboratorSortFields {
   cpf
   name
+}
+
+type CollaboratorTasksConnection {
+  """Array of nodes."""
+  nodes: [Task!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
 }
 
 input CollaboratorUpdateFilter {
@@ -113,10 +151,12 @@ input CreateOneWorkInput {
 }
 
 input CreateTaskInput {
+  collaboratorId: String!
   deliveryDate: DateTime!
   expectedDate: DateTime!
   name: String!
   status: String!
+  workId: String!
 }
 
 input CreateWorkInput {
@@ -185,6 +225,7 @@ input DeleteOneWorkInput {
 }
 
 type Mutation {
+  addTasksToCollaborator(input: AddTasksToCollaboratorInput!): Collaborator!
   createManyCollaborators(input: CreateManyCollaboratorsInput!): [Collaborator!]!
   createManyTasks(input: CreateManyTasksInput!): [Task!]!
   createManyWorks(input: CreateManyWorksInput!): [Work!]!
@@ -197,6 +238,12 @@ type Mutation {
   deleteOneCollaborator(input: DeleteOneCollaboratorInput!): CollaboratorDeleteResponse!
   deleteOneTask(input: DeleteOneTaskInput!): TaskDeleteResponse!
   deleteOneWork(input: DeleteOneWorkInput!): WorkDeleteResponse!
+  removeCollaboratorFromTask(input: RemoveCollaboratorFromTaskInput!): Task!
+  removeTasksFromCollaborator(input: RemoveTasksFromCollaboratorInput!): Collaborator!
+  removeWorkFromTask(input: RemoveWorkFromTaskInput!): Task!
+  setCollaboratorOnTask(input: SetCollaboratorOnTaskInput!): Task!
+  setTasksOnCollaborator(input: SetTasksOnCollaboratorInput!): Collaborator!
+  setWorkOnTask(input: SetWorkOnTaskInput!): Task!
   updateManyCollaborators(input: UpdateManyCollaboratorsInput!): UpdateManyResponse!
   updateManyTasks(input: UpdateManyTasksInput!): UpdateManyResponse!
   updateManyWorks(input: UpdateManyWorksInput!): UpdateManyResponse!
@@ -266,6 +313,54 @@ type Query {
   ): WorkConnection!
 }
 
+input RemoveCollaboratorFromTaskInput {
+  """The id of the record."""
+  id: ID!
+
+  """The id of relation."""
+  relationId: ID!
+}
+
+input RemoveTasksFromCollaboratorInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}
+
+input RemoveWorkFromTaskInput {
+  """The id of the record."""
+  id: ID!
+
+  """The id of relation."""
+  relationId: ID!
+}
+
+input SetCollaboratorOnTaskInput {
+  """The id of the record."""
+  id: ID!
+
+  """The id of relation."""
+  relationId: ID!
+}
+
+input SetTasksOnCollaboratorInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}
+
+input SetWorkOnTaskInput {
+  """The id of the record."""
+  id: ID!
+
+  """The id of relation."""
+  relationId: ID!
+}
+
 """Sort Directions"""
 enum SortDirection {
   ASC
@@ -296,11 +391,13 @@ input StringFieldComparison {
 }
 
 type Task {
+  collaborator: Collaborator!
   deliveryDate: DateTime!
   expectedDate: DateTime!
   id: String!
   name: String!
   status: String!
+  work: Work!
 }
 
 type TaskAggregateGroupBy {
@@ -344,10 +441,26 @@ type TaskDeleteResponse {
 
 input TaskFilter {
   and: [TaskFilter!]
+  collaborator: TaskFilterCollaboratorFilter
   deliveryDate: DateFieldComparison
   expectedDate: DateFieldComparison
   name: StringFieldComparison
   or: [TaskFilter!]
+  work: TaskFilterWorkFilter
+}
+
+input TaskFilterCollaboratorFilter {
+  and: [TaskFilterCollaboratorFilter!]
+  cpf: StringFieldComparison
+  name: StringFieldComparison
+  or: [TaskFilterCollaboratorFilter!]
+}
+
+input TaskFilterWorkFilter {
+  and: [TaskFilterWorkFilter!]
+  estimatedDate: DateFieldComparison
+  name: StringFieldComparison
+  or: [TaskFilterWorkFilter!]
 }
 
 type TaskMaxAggregate {
@@ -442,11 +555,13 @@ input UpdateOneWorkInput {
 }
 
 input UpdateTaskInput {
+  collaboratorId: String
   deliveryDate: DateTime
   expectedDate: DateTime
   id: ID
   name: String
   status: String
+  workId: String
 }
 
 input UpdateWorkInput {

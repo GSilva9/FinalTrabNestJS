@@ -13,6 +13,6 @@ export class WorkDTO {
   @FilterableField()
   estimatedDate: Date;
 
-  @Field(() => UpdateCollaboratorInput)
-  task?: UpdateCollaboratorInput
+  // @Field(() => UpdateCollaboratorInput)
+  // task?: UpdateCollaboratorInput
 }

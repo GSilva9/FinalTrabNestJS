@@ -1,4 +1,7 @@
-import { FilterableField, FilterableRelation } from '@nestjs-query/query-graphql';
+import {
+  FilterableField,
+  FilterableRelation,
+} from '@nestjs-query/query-graphql';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { CollaboratorDTO } from 'src/modules/collaborators/dto/collaborator.dto';
 import { WorkDTO } from 'src/modules/works/dto/work.dto';
