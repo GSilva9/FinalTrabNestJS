@@ -11,4 +11,6 @@ export class CreateTaskInput {
 
   @IsIn(['opened', 'making', 'finished'])
   status: string;
+
+  collaboratorId: string
 }

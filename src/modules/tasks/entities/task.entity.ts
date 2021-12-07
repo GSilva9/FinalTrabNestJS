@@ -20,4 +20,7 @@ export class Task {
 
   @ManyToOne(() => Collaborator)
   collaborator: Collaborator;
+
+  @Column()
+  collaboratorId: string;
 }
