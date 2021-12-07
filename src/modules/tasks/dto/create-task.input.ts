@@ -13,4 +13,6 @@ export class CreateTaskInput {
   status: string;
 
   collaboratorId: string
+
+  workId: string
 }

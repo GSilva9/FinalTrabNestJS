@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Task } from 'src/modules/tasks/entities/task.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Work {
@@ -10,4 +11,8 @@ export class Work {
 
   @Column()
   estimatedDate: Date;
+
+  @OneToMany(() => Task, (tasks) => tasks.work)
+  tasks: Task[]
+
 }
