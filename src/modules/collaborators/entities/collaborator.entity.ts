@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Task } from 'src/modules/tasks/entities/task.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Collaborator {
@@ -10,5 +11,8 @@ export class Collaborator {
 
   @Column()
   cpf: string;
+
+  @OneToMany(() => Task, (tasks) => tasks.collaborator)
+  tasks: Task[]
 
 }
