@@ -444,14 +444,14 @@ input UpdateOneWorkInput {
 input UpdateTaskInput {
   deliveryDate: DateTime
   expectedDate: DateTime
-  id: Int!
+  id: ID
   name: String
   status: String
 }
 
 input UpdateWorkInput {
   estimatedDate: DateTime
-  id: Int!
+  id: ID
   name: String
 }
 
