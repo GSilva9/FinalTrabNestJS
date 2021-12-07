@@ -384,7 +384,7 @@ input TaskUpdateFilter {
 
 input UpdateCollaboratorInput {
   cpf: String
-  id: String!
+  id: ID
   name: String
 }
 
