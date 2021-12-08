@@ -10,7 +10,7 @@ import { WorkDTO } from 'src/modules/works/dto/work.dto';
 @FilterableRelation('collaborator', () => CollaboratorDTO)
 @FilterableRelation('work', () => WorkDTO)
 export class TaskDTO {
-  @Field()
+  @FilterableField()
   id: string;
 
   @FilterableField()
@@ -24,4 +24,7 @@ export class TaskDTO {
 
   @Field()
   status: string;
+
+  @FilterableField()
+  collaboratorId: string;
 }

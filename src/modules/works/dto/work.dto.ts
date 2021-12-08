@@ -1,10 +1,14 @@
-import { FilterableField } from '@nestjs-query/query-graphql';
-import { Field, ObjectType } from '@nestjs/graphql';
-import { UpdateCollaboratorInput } from 'src/modules/collaborators/dto/update-collaborator.input';
+import {
+  FilterableField,
+  FilterableOffsetConnection,
+} from '@nestjs-query/query-graphql';
+import { ObjectType } from '@nestjs/graphql';
+import { TaskDTO } from 'src/modules/tasks/dto/task.dto';
 
 @ObjectType('Work')
+@FilterableOffsetConnection('tasks', () => TaskDTO, { nullable: true })
 export class WorkDTO {
-  @Field()
+  @FilterableField()
   id: string;
 
   @FilterableField()
@@ -12,7 +16,4 @@ export class WorkDTO {
 
   @FilterableField()
   estimatedDate: Date;
-
-  // @Field(() => UpdateCollaboratorInput)
-  // task?: UpdateCollaboratorInput
 }

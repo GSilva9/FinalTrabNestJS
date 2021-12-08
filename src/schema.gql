@@ -10,6 +10,14 @@ input AddTasksToCollaboratorInput {
   relationIds: [ID!]!
 }
 
+input AddTasksToWorkInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}
+
 type Collaborator {
   cpf: String!
   id: String!
@@ -70,8 +78,10 @@ input CollaboratorFilter {
 
 input CollaboratorFilterTaskFilter {
   and: [CollaboratorFilterTaskFilter!]
+  collaboratorId: StringFieldComparison
   deliveryDate: DateFieldComparison
   expectedDate: DateFieldComparison
+  id: StringFieldComparison
   name: StringFieldComparison
   or: [CollaboratorFilterTaskFilter!]
 }
@@ -226,6 +236,7 @@ input DeleteOneWorkInput {
 
 type Mutation {
   addTasksToCollaborator(input: AddTasksToCollaboratorInput!): Collaborator!
+  addTasksToWork(input: AddTasksToWorkInput!): Work!
   createManyCollaborators(input: CreateManyCollaboratorsInput!): [Collaborator!]!
   createManyTasks(input: CreateManyTasksInput!): [Task!]!
   createManyWorks(input: CreateManyWorksInput!): [Work!]!
@@ -240,9 +251,11 @@ type Mutation {
   deleteOneWork(input: DeleteOneWorkInput!): WorkDeleteResponse!
   removeCollaboratorFromTask(input: RemoveCollaboratorFromTaskInput!): Task!
   removeTasksFromCollaborator(input: RemoveTasksFromCollaboratorInput!): Collaborator!
+  removeTasksFromWork(input: RemoveTasksFromWorkInput!): Work!
   removeWorkFromTask(input: RemoveWorkFromTaskInput!): Task!
   setCollaboratorOnTask(input: SetCollaboratorOnTaskInput!): Task!
   setTasksOnCollaborator(input: SetTasksOnCollaboratorInput!): Collaborator!
+  setTasksOnWork(input: SetTasksOnWorkInput!): Work!
   setWorkOnTask(input: SetWorkOnTaskInput!): Task!
   updateManyCollaborators(input: UpdateManyCollaboratorsInput!): UpdateManyResponse!
   updateManyTasks(input: UpdateManyTasksInput!): UpdateManyResponse!
@@ -329,6 +342,14 @@ input RemoveTasksFromCollaboratorInput {
   relationIds: [ID!]!
 }
 
+input RemoveTasksFromWorkInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}
+
 input RemoveWorkFromTaskInput {
   """The id of the record."""
   id: ID!
@@ -346,6 +367,14 @@ input SetCollaboratorOnTaskInput {
 }
 
 input SetTasksOnCollaboratorInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}
+
+input SetTasksOnWorkInput {
   """The id of the record."""
   id: ID!
 
@@ -392,6 +421,7 @@ input StringFieldComparison {
 
 type Task {
   collaborator: Collaborator!
+  collaboratorId: String!
   deliveryDate: DateTime!
   expectedDate: DateTime!
   id: String!
@@ -401,8 +431,10 @@ type Task {
 }
 
 type TaskAggregateGroupBy {
+  collaboratorId: String
   deliveryDate: DateTime
   expectedDate: DateTime
+  id: String
   name: String
 }
 
@@ -418,20 +450,25 @@ type TaskConnection {
 }
 
 type TaskCountAggregate {
+  collaboratorId: Int
   deliveryDate: Int
   expectedDate: Int
+  id: Int
   name: Int
 }
 
 input TaskDeleteFilter {
   and: [TaskDeleteFilter!]
+  collaboratorId: StringFieldComparison
   deliveryDate: DateFieldComparison
   expectedDate: DateFieldComparison
+  id: StringFieldComparison
   name: StringFieldComparison
   or: [TaskDeleteFilter!]
 }
 
 type TaskDeleteResponse {
+  collaboratorId: String
   deliveryDate: DateTime
   expectedDate: DateTime
   id: String
@@ -442,8 +479,10 @@ type TaskDeleteResponse {
 input TaskFilter {
   and: [TaskFilter!]
   collaborator: TaskFilterCollaboratorFilter
+  collaboratorId: StringFieldComparison
   deliveryDate: DateFieldComparison
   expectedDate: DateFieldComparison
+  id: StringFieldComparison
   name: StringFieldComparison
   or: [TaskFilter!]
   work: TaskFilterWorkFilter
@@ -459,19 +498,24 @@ input TaskFilterCollaboratorFilter {
 input TaskFilterWorkFilter {
   and: [TaskFilterWorkFilter!]
   estimatedDate: DateFieldComparison
+  id: StringFieldComparison
   name: StringFieldComparison
   or: [TaskFilterWorkFilter!]
 }
 
 type TaskMaxAggregate {
+  collaboratorId: String
   deliveryDate: DateTime
   expectedDate: DateTime
+  id: String
   name: String
 }
 
 type TaskMinAggregate {
+  collaboratorId: String
   deliveryDate: DateTime
   expectedDate: DateTime
+  id: String
   name: String
 }
 
@@ -482,15 +526,19 @@ input TaskSort {
 }
 
 enum TaskSortFields {
+  collaboratorId
   deliveryDate
   expectedDate
+  id
   name
 }
 
 input TaskUpdateFilter {
   and: [TaskUpdateFilter!]
+  collaboratorId: StringFieldComparison
   deliveryDate: DateFieldComparison
   expectedDate: DateFieldComparison
+  id: StringFieldComparison
   name: StringFieldComparison
   or: [TaskUpdateFilter!]
 }
@@ -574,10 +622,21 @@ type Work {
   estimatedDate: DateTime!
   id: String!
   name: String!
+  tasks(
+    """Specify to filter the records returned."""
+    filter: TaskFilter = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [TaskSort!] = []
+  ): WorkTasksConnection
 }
 
 type WorkAggregateGroupBy {
   estimatedDate: DateTime
+  id: String
   name: String
 }
 
@@ -594,12 +653,14 @@ type WorkConnection {
 
 type WorkCountAggregate {
   estimatedDate: Int
+  id: Int
   name: Int
 }
 
 input WorkDeleteFilter {
   and: [WorkDeleteFilter!]
   estimatedDate: DateFieldComparison
+  id: StringFieldComparison
   name: StringFieldComparison
   or: [WorkDeleteFilter!]
 }
@@ -613,17 +674,31 @@ type WorkDeleteResponse {
 input WorkFilter {
   and: [WorkFilter!]
   estimatedDate: DateFieldComparison
+  id: StringFieldComparison
   name: StringFieldComparison
   or: [WorkFilter!]
+  tasks: WorkFilterTaskFilter
+}
+
+input WorkFilterTaskFilter {
+  and: [WorkFilterTaskFilter!]
+  collaboratorId: StringFieldComparison
+  deliveryDate: DateFieldComparison
+  expectedDate: DateFieldComparison
+  id: StringFieldComparison
+  name: StringFieldComparison
+  or: [WorkFilterTaskFilter!]
 }
 
 type WorkMaxAggregate {
   estimatedDate: DateTime
+  id: String
   name: String
 }
 
 type WorkMinAggregate {
   estimatedDate: DateTime
+  id: String
   name: String
 }
 
@@ -635,12 +710,25 @@ input WorkSort {
 
 enum WorkSortFields {
   estimatedDate
+  id
   name
+}
+
+type WorkTasksConnection {
+  """Array of nodes."""
+  nodes: [Task!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
 }
 
 input WorkUpdateFilter {
   and: [WorkUpdateFilter!]
   estimatedDate: DateFieldComparison
+  id: StringFieldComparison
   name: StringFieldComparison
   or: [WorkUpdateFilter!]
 }

@@ -1,6 +1,12 @@
 import { Collaborator } from 'src/modules/collaborators/entities/collaborator.entity';
 import { Work } from 'src/modules/works/entities/work.entity';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Task {
@@ -25,7 +31,7 @@ export class Task {
   @Column()
   collaboratorId: string;
 
-  @ManyToOne(() => Work)
+  @ManyToOne(() => Work, { onDelete: 'CASCADE' })
   work: Work;
 
   @Column()
